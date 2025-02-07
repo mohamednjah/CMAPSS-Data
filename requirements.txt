@@ -1,0 +1,1 @@
+├── data/ │ ├── train_FD001.txt │ ├── test_FD001.txt │ └── ... ├── notebooks/ │ ├── data_exploration.ipynb │ ├── feature_engineering.ipynb │ └── model_training.ipynb ├── scripts/ │ ├── ingest_data.py │ ├── preprocess_data.py │ └── train_model.py ├── deployment/ │ ├── web_interface/ │ │ ├── app.py │ │ └── ... │ └── Dockerfile ├── requirements.txt └── README.md
