@@ -6,14 +6,8 @@ This repository is part of the **Big Data Technologies** project, focusing on cr
 
 ## Table of Contents
 1. [Project Overview](#project-overview)  
-2. [CMAPSS Jet Engine Data](#cmapss-jet-engine-data)  
-3. [Big Data Architecture](#big-data-architecture)  
-4. [Machine Learning Pipeline](#machine-learning-pipeline)  
-5. [Web Interface & Model Deployment](#web-interface--model-deployment)  
-6. [Project Structure](#project-structure)  
-7. [Getting Started](#getting-started)  
-8. [Future Improvements](#future-improvements)  
-9. [References](#references)
+2. [CMAPSS Jet Engine Data](#cmapss-jet-engine-data)    
+3. [Getting Started](#getting-started)  
 
 ---
 
