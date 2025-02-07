@@ -37,5 +37,5 @@ To run this project locally or in a cloud environment:
 1. **Clone the Repository**  
    ```bash
    git clone https://github.com/mohamednjah/CMAPSS-Data.git
-   pip install -r requirements.txt
    cd CMAPSS-Data
+   pip install -r requirements.txt
