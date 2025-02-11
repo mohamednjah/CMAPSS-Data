@@ -1,29 +1,69 @@
-# Variables – adjust these values as needed
-$containerName = "my-postgres"
-$postgresUser = "myuser"
-$postgresPassword = "mypassword"
-$postgresDB = "mydatabase"
-$hostPort = 5432
-$containerPort = 5432
-$image = "postgres:latest"
+# ---------------------------
+# PostgreSQL Variables
+# ---------------------------
+$pgContainerName   = "my-postgres"
+$pgUser            = "myuser"
+$pgPassword        = "mypassword"
+$pgDB              = "mydatabase"
+$pgHostPort        = 5432
+$pgContainerPort   = 5432
+$pgImage           = "postgres:latest"
 
-# Check if a container with the given name already exists
-$existingContainer = docker ps -a --filter "name=$containerName" --format "{{.Names}}"
+# ---------------------------
+# RabbitMQ Variables
+# (Using the "3-management" tag for mgmt console on 15672)
+# ---------------------------
+$rmqContainerName  = "my-rabbit"
+$rmqImage          = "rabbitmq:3-management"
+$rmqHostPortAMQP   = 5672      # AMQP port
+$rmqHostPortMgmt   = 15672     # RabbitMQ Management UI
+$rmqContainerPortAMQP = 5672
+$rmqContainerPortMgmt = 15672
 
-if ($existingContainer -eq $containerName) {
-    Write-Host "Container $containerName already exists. Stopping and removing it..."
-    docker stop $containerName | Out-Null
-    docker rm $containerName | Out-Null
+# ---------------------------
+# Function to stop/remove container if it exists
+# ---------------------------
+function Remove-ExistingContainerIfAny($containerName) {
+    $existingContainer = docker ps -a --filter "name=$containerName" --format "{{.Names}}"
+    if ($existingContainer -eq $containerName) {
+        Write-Host "Container $containerName already exists. Stopping and removing it..."
+        docker stop $containerName | Out-Null
+        docker rm $containerName | Out-Null
+    }
 }
 
-# Build the port mapping string using subexpression syntax to correctly insert the variables
-$portMapping = "$($hostPort):$($containerPort)"
+# ---------------------------
+# 1) Start PostgreSQL Container
+# ---------------------------
+Remove-ExistingContainerIfAny $pgContainerName
 
-# Run the PostgreSQL container in detached mode with the specified environment variables and port mapping
-docker run -d --name $containerName -p $portMapping `
-    -e "POSTGRES_USER=$postgresUser" `
-    -e "POSTGRES_PASSWORD=$postgresPassword" `
-    -e "POSTGRES_DB=$postgresDB" `
-    $image
+# Build the port mapping string for PostgreSQL
+$pgPortMapping = "$($pgHostPort):$($pgContainerPort)"
 
-Write-Host "PostgreSQL container '$containerName' is running on port $hostPort."
+Write-Host "Starting PostgreSQL container: $pgContainerName ..."
+docker run -d --name $pgContainerName `
+    -p $pgPortMapping `
+    -e "POSTGRES_USER=$pgUser" `
+    -e "POSTGRES_PASSWORD=$pgPassword" `
+    -e "POSTGRES_DB=$pgDB" `
+    $pgImage | Out-Null
+
+Write-Host "PostgreSQL container '$pgContainerName' is running on port $pgHostPort."
+
+# ---------------------------
+# 2) Start RabbitMQ Container
+# ---------------------------
+Remove-ExistingContainerIfAny $rmqContainerName
+
+# Build port mappings for RabbitMQ
+$rmqPortMappingAMQP = "$($rmqHostPortAMQP):$($rmqContainerPortAMQP)"
+$rmqPortMappingMgmt = "$($rmqHostPortMgmt):$($rmqContainerPortMgmt)"
+
+Write-Host "Starting RabbitMQ container: $rmqContainerName ..."
+docker run -d --name $rmqContainerName `
+    -p $rmqPortMappingAMQP `
+    -p $rmqPortMappingMgmt `
+    $rmqImage | Out-Null
+
+Write-Host "RabbitMQ container '$rmqContainerName' is running on ports $rmqHostPortAMQP (AMQP) and $rmqHostPortMgmt (Mgmt UI)."
+Write-Host "You can access the RabbitMQ management UI at: http://localhost:$rmqHostPortMgmt"

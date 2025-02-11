@@ -38,4 +38,21 @@ To run this project locally or in a cloud environment:
    ```bash
    git clone https://github.com/mohamednjah/CMAPSS-Data.git
    cd CMAPSS-Data
+2. **Install requirements**  
+   ```bash
    pip install -r requirements.txt
+3. **Run containers**  
+   ```bash
+   .\scripts\run_postgres.ps1
+   
+4. **Ingest messages to PostgreSQL**
+   ```bash
+   #for direct ingestion without using a message queuer:
+   py ingestion/direct_ingestion.py
+   
+5.
+   **otherwise (still has bugs)**
+   ```bash
+   #to use a message queuer
+   py ingestion/producer.py
+   py ingestion/consumer.py
