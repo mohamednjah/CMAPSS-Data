@@ -16,6 +16,8 @@ from sqlalchemy import create_engine
 # ------------------------------------------------------------------------------
 DB_URI = "postgresql://myuser:mypassword@localhost:5432/mydatabase"
 
+
+
 # Create a global SQLAlchemy engine
 engine = create_engine(DB_URI)
 
@@ -76,9 +78,11 @@ def ingest_fd_data(dataset_name, folder_path):
                  train_FDXXX.txt, test_FDXXX.txt, RUL_FDXXX.txt
     """
     # 3.1) Paths to each file
-    train_file = os.path.join(folder_path, f"train_{dataset_name}.txt")
-    test_file = os.path.join(folder_path, f"test_{dataset_name}.txt")
-    rul_file = os.path.join(folder_path, f"RUL_{dataset_name}.txt")
+    train_file = os.path.join("data/raw", f"train_{dataset_name}.txt")
+    test_file = os.path.join("data/raw", f"test_{dataset_name}.txt")
+    rul_file = os.path.join("data/raw", f"RUL_{dataset_name}.txt")
+
+
 
     # 3.2) Read the TRAIN file
     train_df = pd.read_csv(
