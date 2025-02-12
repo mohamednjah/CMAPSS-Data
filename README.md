@@ -30,36 +30,39 @@ The ultimate goal is to demonstrate **predictive maintenance** capabilities usin
 - **Sensor measurements** (fan speed, core speed, temperatures, pressures, etc.) recorded over time.  
 - **Run-to-failure** cycles for engines, allowing you to train and validate models that predict remaining useful life (RUL) or other performance metrics.
 
-##   Data Preprocessing
+
+## Data Preprocessing
 
 Before training the machine learning model, the CMAPSS dataset underwent a structured preprocessing pipeline. This ensured data quality, consistency, and optimal input for model training. The following steps were applied:
 
-###   1. Handling Missing Values  
+### 1. Handling Missing Values
 - No missing values were detected in the dataset, so no imputation was required.
 
-###   2. Outlier Detection & Removal  
-- The **Z-score method** with a threshold of **3.0** was used to detect and remove outliers.  
-- **3,985 records** were identified as outliers and removed, improving the dataset’s integrity.
+### 2. Outlier Detection & Removal
+- The Z-score method with a threshold of **4.0** was used to detect and remove outliers.
+- **2,985** records were identified as outliers and removed, improving the dataset’s integrity.
 
-###   3. Feature Scaling & Normalization  
+### 3. Feature Scaling & Normalization
 - Min-Max Scaling was applied to sensor readings to bring all values between **0 and 1** for uniformity.
 
-###   4. Data Storage & Accessibility  
-- The **cleaned dataset** is stored in the **PostgreSQL database** under the table **`preprocessed_data`**.  
-- A CSV version is available in the repository at:  
-  📂 **`data/preprocessed_data.csv`**
+### 4. Data Storage & Accessibility
+- The cleaned dataset is stored in the **PostgreSQL database** under the table:  
+  ```plaintext
+  preprocessed_data
+  ```
 
-###   5. Next Steps  
-- This preprocessed dataset is **ready for machine learning training**.
-- The **ML team** should use **`preprocessed_data.csv`** for further model development.
+### 5. Next Steps
+- This preprocessed dataset is ready for machine learning training.  
+- The ML team should use `preprocessed_data.csv` for further model development.  
 
-📖 **For more details on preprocessing, refer to:**  
-📍 [`docs/preprocessing_report.md`](docs/preprocessing_report.md)
+📚 For more details on preprocessing, refer to:  
+📍 `docs/preprocessing_report.md`
+
 
 
 ## Getting Started
 
-To run this project locally or in a cloud environment:
+To run this project locally or in cloud  environment:
 
 1. **Clone the Repository**  
    ```bash
