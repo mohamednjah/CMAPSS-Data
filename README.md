@@ -31,31 +31,50 @@ The ultimate goal is to demonstrate **predictive maintenance** capabilities usin
 - **Run-to-failure** cycles for engines, allowing you to train and validate models that predict remaining useful life (RUL) or other performance metrics.
 
 
-## Data Preprocessing
+### **  Data Preprocessing**  
 
-Before training the machine learning model, the CMAPSS dataset underwent a structured preprocessing pipeline. This ensured data quality, consistency, and optimal input for model training. The following steps were applied:
+Before training the machine learning model, the CMAPSS dataset underwent a structured **data preprocessing pipeline** to enhance data quality, ensure consistency, and optimize it for model training. The following preprocessing steps were applied:  
 
-### 1. Handling Missing Values
-- No missing values were detected in the dataset, so no imputation was required.
+---  
 
-### 2. Outlier Detection & Removal
-- The Z-score method with a threshold of **4.0** was used to detect and remove outliers.
-- **2,985** records were identified as outliers and removed, improving the dataset’s integrity.
+### **  1. Handling Missing Values**  
+  The dataset was analyzed for missing values across all features.  
+  No missing values were found, so no imputation or data filling was necessary.  
 
-### 3. Feature Scaling & Normalization
-- Min-Max Scaling was applied to sensor readings to bring all values between **0 and 1** for uniformity.
+---  
 
-### 4. Data Storage & Accessibility
-- The cleaned dataset is stored in the **PostgreSQL database** under the table:  
-  ```plaintext
-  preprocessed_data
-  ```
+### **  2. Outlier Detection & Removal**  
+  **Outliers** were detected using the **Z-score method** with a threshold of **4.0** to remove extreme values that could distort model performance.  
+  **2,985** rows were identified as outliers and removed, ensuring the dataset reflects **realistic engine performance patterns**.  
 
-### 5. Next Steps
-- This preprocessed dataset is ready for machine learning training.  
-- The ML team should use `preprocessed_data.csv` for further model development.  
+---  
 
-📚 For more details on preprocessing, refer to:  
+### **  3. Feature Scaling & Normalization**  
+  **Min-Max Scaling** was applied to normalize sensor values and operational settings, ensuring all numerical values fall within a range of **0 to 1**.  
+  This step prevents large-valued features from dominating smaller ones and improves **training stability**.  
+
+---  
+
+### **  4. Data Storage & Accessibility**  
+  The **cleaned dataset** was stored securely in a **PostgreSQL database** under the table:  
+```plaintext
+preprocessed_data
+```
+  A **backup CSV file** was generated and saved for accessibility in:  
+📂 `notebooks/data/preprocessed_data.csv`  
+
+  This ensures that the data remains easily accessible for further analysis and model training.  
+
+---  
+
+### **  5. Next Steps**  
+  The preprocessed dataset is **ready for machine learning training** and further analysis.  
+  The ML team should use the cleaned dataset stored in `preprocessed_data.csv` for **model development and training**.  
+  Future steps may involve **feature engineering, model selection, and hyperparameter tuning** based on the preprocessed data.  
+
+---  
+
+📚 **For detailed information on each preprocessing step, refer to:**  
 📍 `docs/preprocessing_report.md`
 
 
