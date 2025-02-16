@@ -105,3 +105,14 @@ To run this project locally or in cloud  environment:
    #to use a message queuer
    py ingestion/producer.py
    py ingestion/consumer.py
+
+6. Install Node.js
+
+7. **Run the web interface**
+    ```sh
+    cd web_interface
+    npm install  # Ensure dependencies are installed
+    node src/app/server.js  # Start the server manually (if applicable)
+    npm run dev  # Or use this if the project has a dev script
+    ```
+
