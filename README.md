@@ -31,31 +31,31 @@ The ultimate goal is to demonstrate **predictive maintenance** capabilities usin
 - **Run-to-failure** cycles for engines, allowing you to train and validate models that predict remaining useful life (RUL) or other performance metrics.
 
 
-### **  Data Preprocessing**  
+### **Data Preprocessing**  
 
 Before training the machine learning model, the CMAPSS dataset underwent a structured **data preprocessing pipeline** to enhance data quality, ensure consistency, and optimize it for model training. The following preprocessing steps were applied:  
 
 ---  
 
-### **  1. Handling Missing Values**  
+### **1. Handling Missing Values**  
   The dataset was analyzed for missing values across all features.  
   No missing values were found, so no imputation or data filling was necessary.  
 
 ---  
 
-### **  2. Outlier Detection & Removal**  
+### **2. Outlier Detection & Removal**  
   **Outliers** were detected using the **Z-score method** with a threshold of **4.0** to remove extreme values that could distort model performance.  
   **2,985** rows were identified as outliers and removed, ensuring the dataset reflects **realistic engine performance patterns**.  
 
 ---  
 
-### **  3. Feature Scaling & Normalization**  
+### **3. Feature Scaling & Normalization**  
   **Min-Max Scaling** was applied to normalize sensor values and operational settings, ensuring all numerical values fall within a range of **0 to 1**.  
   This step prevents large-valued features from dominating smaller ones and improves **training stability**.  
 
 ---  
 
-### **  4. Data Storage & Accessibility**  
+### **4. Data Storage & Accessibility**  
   The **cleaned dataset** was stored securely in a **PostgreSQL database** under the table:  
 ```plaintext
 preprocessed_data
@@ -67,7 +67,7 @@ preprocessed_data
 
 ---  
 
-### **  5. Next Steps**  
+### **5. Next Steps**  
   The preprocessed dataset is **ready for machine learning training** and further analysis.  
   The ML team should use the cleaned dataset stored in `preprocessed_data.csv` for **model development and training**.  
   Future steps may involve **feature engineering, model selection, and hyperparameter tuning** based on the preprocessed data.  
@@ -94,21 +94,24 @@ To run this project locally or in cloud  environment:
    ```bash
    .\scripts\run_postgres.ps1
    
-4. **Ingest messages to PostgreSQL**
+4. **Ingest messages directly to PostgreSQL**
    ```bash
-   #for direct ingestion without using a message queuer:
    py ingestion/direct_ingestion.py
    
 5.
-   **otherwise (still has bugs)**
+   **Ingest data using RabbitMQ**
    ```bash
-   #to use a message queuer
    py ingestion/producer.py
    py ingestion/consumer.py
 
-6. Install Node.js
+6.
+   **For the preprocessing, run the preprocessing_fixed.ipynb**
+7.
+   **For the ML learning, run the ml.ipynb**
 
-7. **Run the web interface**
+8. Install Node.js
+
+9. **Run the web interface**
     ```sh
     python .\web_interface_be\server.py  # to run backend
 
