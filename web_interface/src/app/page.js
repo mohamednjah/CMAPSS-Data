@@ -9,6 +9,9 @@ const Home = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [file, setFile] = useState(null);
+  const [bestModelRUL, setBestModelRUL] = useState(null);
+  const [fetchingRUL, setFetchingRUL] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,7 +28,7 @@ const Home = () => {
         const formattedData = jsonData.map(model => ({
           model: model.model,
           predictions: model.predictions
-            .filter((_, index) => index % downsampleFactor === 0) // Keep every 5th data point
+            .filter((_, index) => index % downsampleFactor === 0)
             .map((value, index) => ({
               index: index + 1,
               value: value
@@ -44,6 +47,33 @@ const Home = () => {
 
     fetchData();
   }, []);
+
+  const handleFileUpload = async (event) => {
+    const uploadedFile = event.target.files[0];
+    if (!uploadedFile) return;
+    setFile(uploadedFile);
+    setFetchingRUL(true);
+
+    const formData = new FormData();
+    formData.append('file', uploadedFile);
+
+    try {
+      const response = await fetch('http://localhost:5001/api/rul', {
+        method: 'POST',
+        body: formData,
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setBestModelRUL(data.rul);
+    } catch (err) {
+      console.error("Error fetching RUL:", err);
+      setBestModelRUL(null);
+    } finally {
+      setFetchingRUL(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -65,9 +95,23 @@ const Home = () => {
     <div className="p-6 space-y-6">
       <h1 className="text-2xl font-bold text-center">Model Predictions</h1>
 
+      <div className="flex flex-col items-center space-y-4">
+        <input
+          type="file"
+          className="border p-2 rounded-md w-80"
+          onChange={handleFileUpload}
+        />
+      </div>
+
+      {bestModelRUL !== null && (
+        <div className="bg-green-100 p-4 rounded-md text-center">
+          <h2 className="text-lg font-bold text-black">Best Model RUL</h2>
+          <p className="text-xl font-semibold">{bestModelRUL}</p>
+        </div>
+      )}
+
       {data.map((modelData, idx) => (
         <div key={idx} className="bg-white shadow-md rounded-lg p-4">
-          
           <div className="border-b pb-2 font-semibold text-lg text-black">{modelData.model}</div>
           <div className="p-2">
             <div className="flex flex-wrap gap-4">
