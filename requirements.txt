@@ -7,3 +7,4 @@ pika
 xgboost
 flask
 lightgbm
+flask_cors

@@ -1,1 +1,3 @@
 .venv
+output_predictions
+notebooks/models

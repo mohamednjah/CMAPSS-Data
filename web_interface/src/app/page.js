@@ -11,7 +11,9 @@ const Home = () => {
   const [error, setError] = useState(null);
   const [file, setFile] = useState(null);
   const [bestModelRUL, setBestModelRUL] = useState(null);
+  const [outputFilePath, setOutputFilePath] = useState(null);
   const [fetchingRUL, setFetchingRUL] = useState(false);
+  const [selectedModel, setSelectedModel] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,8 +24,7 @@ const Home = () => {
         }
         const jsonData = await response.json();
     
-        // Reduce the number of points to display
-        const downsampleFactor = 5; // Display every 5th data point
+        const downsampleFactor = 5;
     
         const formattedData = jsonData.map(model => ({
           model: model.model,
@@ -37,6 +38,9 @@ const Home = () => {
         }));
     
         setData(formattedData);
+        if (formattedData.length > 0) {
+          setSelectedModel(formattedData[0].model);
+        }
       } catch (err) {
         setError(err);
         console.error("Error fetching data:", err);
@@ -53,9 +57,12 @@ const Home = () => {
     if (!uploadedFile) return;
     setFile(uploadedFile);
     setFetchingRUL(true);
+    setBestModelRUL(null);
+    setOutputFilePath(null);
 
     const formData = new FormData();
     formData.append('file', uploadedFile);
+    formData.append('model_name', selectedModel);
 
     try {
       const response = await fetch('http://localhost:5001/api/rul', {
@@ -66,10 +73,14 @@ const Home = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      setBestModelRUL(data.rul);
+      
+      // Assuming backend returns both RUL prediction and output file path
+      setBestModelRUL(data.prediction);
+      setOutputFilePath(data.output_file_path);
     } catch (err) {
       console.error("Error fetching RUL:", err);
       setBestModelRUL(null);
+      setOutputFilePath(null);
     } finally {
       setFetchingRUL(false);
     }
@@ -96,17 +107,44 @@ const Home = () => {
       <h1 className="text-2xl font-bold text-center">Model Predictions</h1>
 
       <div className="flex flex-col items-center space-y-4">
+        <select
+          className="border p-2 rounded-md w-80 text-black"
+          value={selectedModel}
+          onChange={(e) => setSelectedModel(e.target.value)}
+        >
+          {data.map((modelData) => (
+            <option key={modelData.model} value={modelData.model}>
+              {modelData.model}
+            </option>
+          ))}
+        </select>
+
         <input
           type="file"
           className="border p-2 rounded-md w-80"
           onChange={handleFileUpload}
         />
+
+        {fetchingRUL && (
+          <div className="flex justify-center items-center">
+            <div className="border p-3 rounded-md text-center bg-blue-200 animate-pulse">
+              Processing file, please wait...
+            </div>
+          </div>
+        )}
       </div>
 
-      {bestModelRUL !== null && (
+      {/* {bestModelRUL !== null && (
         <div className="bg-green-100 p-4 rounded-md text-center">
           <h2 className="text-lg font-bold text-black">Best Model RUL</h2>
           <p className="text-xl font-semibold">{bestModelRUL}</p>
+        </div>
+      )} */}
+
+      {outputFilePath && (
+        <div className="bg-gray-100 p-4 rounded-md text-center">
+          <h2 className="text-lg font-bold text-black">Output File Path</h2>
+          <p className="text-md text-gray-700">{outputFilePath}</p>
         </div>
       )}
 
@@ -115,7 +153,6 @@ const Home = () => {
           <div className="border-b pb-2 font-semibold text-lg text-black">{modelData.model}</div>
           <div className="p-2">
             <div className="flex flex-wrap gap-4">
-              {/* Display Calculations */}
               <div className="w-full md:w-1/3 p-4 border rounded-lg bg-gray-50 shadow-sm">
                 <h3 className="text-sm font-semibold text-black">Performance Metrics</h3>
                 <ul className="text-gray-700 text-sm space-y-1 mt-2">
@@ -128,8 +165,7 @@ const Home = () => {
                 </ul>
               </div>
 
-              {/* Display Chart */}
-              <div className="w-full md:w-2/3">
+              {/* <div className="w-full md:w-2/3">
                 <ResponsiveContainer width="100%" height={300}>
                   <LineChart data={modelData.predictions}>
                     <CartesianGrid strokeDasharray="3 3" />
@@ -140,7 +176,7 @@ const Home = () => {
                     <Line type="monotone" dataKey="value" stroke="#8884d8" strokeWidth={2} />
                   </LineChart>
                 </ResponsiveContainer>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

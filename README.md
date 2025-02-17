@@ -110,9 +110,10 @@ To run this project locally or in cloud  environment:
 
 7. **Run the web interface**
     ```sh
+    python .\web_interface_be\server.py  # to run backend
+
     cd web_interface
     npm install  # Ensure dependencies are installed
-    node src/app/server.js  # Start the server manually (if applicable)
-    npm run dev  # Or use this if the project has a dev script
+    npm run dev  # to run frontend
     ```
 
